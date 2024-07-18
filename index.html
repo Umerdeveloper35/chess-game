@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <link rel="stylesheet" href="style.css">
+    <table id="chessboard"><tr><td class="white" data-row="0" data-col="0">♜</td><td class="black" data-row="0" data-col="1">♞</td><td class="white" data-row="0" data-col="2">♝</td><td class="black" data-row="0" data-col="3">♛</td><td class="white" data-row="0" data-col="4">♚</td><td class="black" data-row="0" data-col="5">♝</td><td class="white" data-row="0" data-col="6">♞</td><td class="black" data-row="0" data-col="7">♜</td></tr><tr><td class="black" data-row="1" data-col="0">♟</td><td class="white" data-row="1" data-col="1">♟</td><td class="black" data-row="1" data-col="2">♟</td><td class="white" data-row="1" data-col="3">♟</td><td class="black" data-row="1" data-col="4">♟</td><td class="white" data-row="1" data-col="5">♟</td><td class="black" data-row="1" data-col="6">♟</td><td class="white" data-row="1" data-col="7">♟</td></tr><tr><td class="white" data-row="2" data-col="0"></td><td class="black" data-row="2" data-col="1"></td><td class="white" data-row="2" data-col="2"></td><td class="black" data-row="2" data-col="3"></td><td class="white" data-row="2" data-col="4"></td><td class="black" data-row="2" data-col="5"></td><td class="white" data-row="2" data-col="6"></td><td class="black" data-row="2" data-col="7"></td></tr><tr><td class="black" data-row="3" data-col="0"></td><td class="white" data-row="3" data-col="1"></td><td class="black" data-row="3" data-col="2"></td><td class="white" data-row="3" data-col="3"></td><td class="black" data-row="3" data-col="4"></td><td class="white" data-row="3" data-col="5"></td><td class="black" data-row="3" data-col="6"></td><td class="white" data-row="3" data-col="7"></td></tr><tr><td class="white" data-row="4" data-col="0"></td><td class="black" data-row="4" data-col="1"></td><td class="white" data-row="4" data-col="2"></td><td class="black" data-row="4" data-col="3"></td><td class="white" data-row="4" data-col="4"></td><td class="black" data-row="4" data-col="5"></td><td class="white" data-row="4" data-col="6"></td><td class="black" data-row="4" data-col="7"></td></tr><tr><td class="black" data-row="5" data-col="0"></td><td class="white" data-row="5" data-col="1"></td><td class="black" data-row="5" data-col="2"></td><td class="white" data-row="5" data-col="3"></td><td class="black" data-row="5" data-col="4"></td><td class="white" data-row="5" data-col="5"></td><td class="black" data-row="5" data-col="6"></td><td class="white" data-row="5" data-col="7"></td></tr><tr><td class="white" data-row="6" data-col="0">♙</td><td class="black" data-row="6" data-col="1">♙</td><td class="white" data-row="6" data-col="2">♙</td><td class="black" data-row="6" data-col="3">♙</td><td class="white" data-row="6" data-col="4">♙</td><td class="black" data-row="6" data-col="5">♙</td><td class="white" data-row="6" data-col="6">♙</td><td class="black" data-row="6" data-col="7">♙</td></tr><tr><td class="black" data-row="7" data-col="0">♖</td><td class="white" data-row="7" data-col="1">♘</td><td class="black" data-row="7" data-col="2">♗</td><td class="white" data-row="7" data-col="3">♕</td><td class="black" data-row="7" data-col="4">♔</td><td class="white" data-row="7" data-col="5">♗</td><td class="black" data-row="7" data-col="6">♘</td><td class="white" data-row="7" data-col="7">♖</td></tr></table>
+
+    <script>
+        const initialBoard = [
+            ['&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;'],
+            ['&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;'],
+            ['&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;']
+        ];
+
+        let selectedPiece = null;
+        let selectedCell = null;
+
+        function createBoard() {
+            const table = document.getElementById('chessboard');
+            table.innerHTML = '';
+
+            for (let row = 0; row < 8; row++) {
+                const tr = document.createElement('tr');
+                for (let col = 0; col < 8; col++) {
+                    const td = document.createElement('td');
+                    td.className = (row + col) % 2 === 0 ? 'white' : 'black';
+                    td.innerHTML = initialBoard[row][col];
+                    td.dataset.row = row;
+                    td.dataset.col = col;
+                    td.addEventListener('click', handleCellClick);
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+        }
+
+        function handleCellClick(event) {
+            const row = event.target.dataset.row;
+            const col = event.target.dataset.col;
+
+            if (selectedPiece) {
+                movePiece(row, col);
+            } else {
+                selectPiece(row, col);
+            }
+        }
+
+        function selectPiece(row, col) {
+            const piece = initialBoard[row][col];
+            if (piece) {
+                selectedPiece = piece;
+                selectedCell = { row, col };
+                highlightCell(row, col, true);
+            }
+        }
+
+        function movePiece(row, col) {
+            if (selectedPiece) {
+                initialBoard[selectedCell.row][selectedCell.col] = '';
+                initialBoard[row][col] = selectedPiece;
+                selectedPiece = null;
+                selectedCell = null;
+                createBoard();
+            }
+        }
+
+        function highlightCell(row, col, highlight) {
+            const cells = document.querySelectorAll('td');
+            cells.forEach(cell => {
+                if (cell.dataset.row == row && cell.dataset.col == col) {
+                    cell.classList.toggle('highlight', highlight);
+                }
+            });
+        }
+
+        createBoard();
+    </script>
+
+
+</body>
+</html>
